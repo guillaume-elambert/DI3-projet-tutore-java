@@ -1,6 +1,6 @@
-package PointeuseGui;
+package TimeTrackerGui;
 /**
- * @file PointeuseGUI.java
+ * @file TimeTrackerGUI.java
  * @brief Conteint la classe permettant de créer l'IHM d'un pointeuse.
  * @author Guillaume ELAMBERT
  * @date 2021
@@ -10,7 +10,8 @@ package PointeuseGui;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import PointeuseBackEnd.Pointeuse;
+
+import TimeTrackerBackEnd.TimeTracker;
 
 @SuppressWarnings("serial")
 /**
@@ -18,35 +19,34 @@ import PointeuseBackEnd.Pointeuse;
  * @author Guillaume ELAMBERT
  * @date 2021
  */
-public class PointeuseGUI extends JFrame {
+public class TimeTrackerGUI extends JFrame {
 	
-	private Pointeuse pointeuse;
+	private TimeTracker timeTracker;
 	private JPanel contentPane;
+	private MenuBar menuBar;
 
 	
 	/**
 	 * Constructeur par défaut.
 	 * Créé l'IHM de la pointeuse.
 	 */
-	public PointeuseGUI(Pointeuse pointeuse) {
+	public TimeTrackerGUI(TimeTracker timeTracker) {
 		
-		this.pointeuse = pointeuse;
-		new SettingsPopup(this.pointeuse);
-
-		System.out.println("Settings main: " + this.pointeuse.toString() +"\n\n");
+		this.timeTracker = timeTracker;
+		new SettingsPopup(this.timeTracker);
 
 		// Paramètre du conteneur
-		setTitle("Pointeuse - Emulateur");
+		setTitle("TimeTracker - Emulateur");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(450, 300));
 
 		// Contenu
-		contentPane = new HomePanel();
+		contentPane = new HomePanel(timeTracker);
 		setContentPane(contentPane);
 
 		// On définit la barre d'outils
-		MenuBar menuBar = new MenuBar(this.pointeuse);
+		menuBar = new MenuBar(this.timeTracker);
 		setJMenuBar(menuBar);
 
 		pack();

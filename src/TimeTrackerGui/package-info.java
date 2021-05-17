@@ -3,4 +3,4 @@
  * @author Guillaume ELAMBERT
  * @date 2021
  */
-package PointeuseGui;
+package TimeTrackerGui;

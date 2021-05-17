@@ -28,3 +28,4 @@ hs_err_pid*
 
 # Emulator settings and content
 .emu-settings/
+bin/

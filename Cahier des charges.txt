@@ -1,0 +1,46 @@
+Cahier des Charges : Projet Java “Pointages”
+
+Fonctionnalités :
+
+Pointages des heures d’arrivées/départs des salariés.
+Un employé aura un EDT.
+Gérer les heures supps négatives/positives (les comptabiliser)
+CRUD sur les employés
+Un historique des pointages
+Paramètres (param IP & port de l’application principale pour la pointeuse etc)
+
+
+Classes :
+
+Départements
+Employés
+“Pointages”?
+EDT?
+Emulateur? (pour prévoir l’option plusieurs émulateurs possibles)
+
+Notes importantes pour UML/Modélisation :
+
+L’entreprise est constituée de plusieurs départements, eux-mêmes contenant des employés.
+Un employé appartient à un département et un seul.
+Chaque employé est identifié par un identifiant unique, stocké notamment dans sa carte professionnelle pour enregistrer ses pointages.
+
+Aurane :
+     - Gestion des inputs de la pointeuse (récupération des données de pointage, transfert via les sockets, enregistrement dans la bonne structure de donnée (modifier roger pour stocker ).
+Sauvegarde des données par sérialisation (employés, départements, pointages, pointages en attente d’envoi, etc., et restauration par désérialisation au lancement des applis. → sauvegarde permanente
+
+Clément :
+- Gestion des employés (CRUD...) , y compris gestion des plannings 
+- Création - ajout d’un employé 
+- Visualisation de la liste des employés 
+- Visualisation détaillée d’un employé. 
+- Modification d’un employé 
+- Suppression d’un employé
+Émulateur:
+-stockage locale des données si connexion au système centrale impossible
+    stockage illimité (autant de temps qu'il faut)
+-arrondie des heures au 1/4 d'heure près
+-un pointage = date + heure arrondie + identifiant de l'employé
+-socket TCP pour communication avec appli centrale
+-sérialisation auto des données à la fermeture de l'applis et désérialisation à l'ouverture
+-configuration réseau: IP et port?
+

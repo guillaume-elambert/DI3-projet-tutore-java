@@ -1,10 +1,13 @@
-package PointeuseGui;
+package TimeTrackerGui;
+
 /**
  * @file HomePanel.java
  * @brief Contient la classe permettant la création de l'écran principal de l'IHM de la pointeuse.
  * @author Guillaume ELAMBERT
  * @date 2021
  */
+
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -15,7 +18,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,6 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+
+import TimeTrackerBackEnd.TimeTracker;
 
 @SuppressWarnings("serial")
 /**
@@ -37,10 +42,11 @@ class HomePanel extends JPanel {
 	private JPanel trueTimeContainer;
 	private JLabel trueTime;
 	private JPanel champs;
-	private JTextField idSalarie;
+	private JTextField idEmployee;
 	private JButton submitButton;
+	private static Calendar currentDate;
 
-	public HomePanel() {
+	public HomePanel(TimeTracker timeTracker) {
 
 		// Paramètres du conteneur
 		setPreferredSize(new Dimension(450, 300));
@@ -102,11 +108,11 @@ class HomePanel extends JPanel {
 		add(champs);
 
 		// Champ de saisie de l'identifiant de l'employé
-		idSalarie = new JTextField();
-		idSalarie.setBounds(0, 2, 248, 39);
-		idSalarie.setText(placeholder);
-		idSalarie.setColumns(10);
-		champs.add(idSalarie);
+		idEmployee = new JTextField();
+		idEmployee.setBounds(0, 2, 248, 39);
+		idEmployee.setText(placeholder);
+		idEmployee.setColumns(10);
+		champs.add(idEmployee);
 
 		// Bouton de validation
 		submitButton = new JButton("Valider");
@@ -120,12 +126,17 @@ class HomePanel extends JPanel {
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Identifiant du salarié :" + idSalarie.getText());
+				
+				timeTracker.getTcpClient().sendTimeTrackingData(
+						DateFormat.getDateInstance(DateFormat.SHORT).format(currentDate.getTime()), 
+						DateFormat.getTimeInstance().format(currentDate.getTime()), 
+						Integer.parseInt(idEmployee.getText())
+				);
 			}
 		});
 
 		// On effectue des vérifications quand le contenu du champ de saisie a changé
-		idSalarie.addActionListener(new ActionListener() {
+		idEmployee.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setSubmitButtonState();
@@ -133,7 +144,7 @@ class HomePanel extends JPanel {
 		});
 
 		// On effectue des vérifications quand le contenu du champ de saisie a changé
-		idSalarie.addKeyListener(new KeyAdapter() {
+		idEmployee.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				setSubmitButtonState();
@@ -143,24 +154,25 @@ class HomePanel extends JPanel {
 		// Soit on affiche un texte par défaut si le champ de saisie est vide
 		// Soit on supprime le texte par défaut si l'utilisateur est sur le champ de
 		// saisie
-		idSalarie.addFocusListener(new FocusListener() {
+		idEmployee.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (idSalarie.getText().equals(placeholder)) {
-					idSalarie.setText("");
-					idSalarie.setForeground(Color.BLACK);
+				if (idEmployee.getText().equals(placeholder)) {
+					idEmployee.setText("");
+					idEmployee.setForeground(Color.BLACK);
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (idSalarie.getText().isEmpty()) {
-					idSalarie.setForeground(Color.GRAY);
-					idSalarie.setText(placeholder);
+				if (idEmployee.getText().isEmpty()) {
+					idEmployee.setForeground(Color.GRAY);
+					idEmployee.setText(placeholder);
 				}
 			}
 		});
 
+		
 		// On créé un timer pour actualiser le texte du jour et de l'heure
 		Timer timer = new Timer(500, new ActionListener() {
 			@Override
@@ -181,52 +193,47 @@ class HomePanel extends JPanel {
 	 * Fonction qui définit la valeur de la date.
 	 */
 	public void setDay() {
-		day.setText(DateFormat.getDateInstance().format(new Date()));
+		day.setText(DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
 	}
 
 	/**
 	 * Fonction qui définit la valeur de l'horloge.
 	 */
 	public void setClock() {
-		clock.setText(DateFormat.getTimeInstance().format(new Date()));
+		clock.setText(DateFormat.getTimeInstance().format(Calendar.getInstance().getTime()));
 	}
 
 	/**
 	 * Fonction qui définit la valeur de l'heure retenue.
 	 */
-	@SuppressWarnings("deprecation")
 	public void setTrueTime() {
-		// On récupère la date
-		Date currentDate = new Date();
-		// On stock la minute
-		int currentMinute = currentDate.getMinutes();
+		
+		currentDate = Calendar.getInstance();
+		
 		// On calcul la différence avec le quart d'heure
-		int mod = currentMinute % 15;
+		int mod = currentDate.get(Calendar.MINUTE) % 15;
 
-		// Si la minute est plus proche du quart d'heure précédent, c'est lui qu'on
-		// prend, l'autre sinon
-		currentMinute += (mod < 8 ? -mod : (15 - mod));
-		currentDate.setMinutes(currentMinute);
-		currentDate.setSeconds(0);
-
-		trueTime.setText(DateFormat.getTimeInstance().format(currentDate));
+		// Si la minute est plus proche du quart d'heure précédent, c'est lui qu'on prend, l'autre sinon
+		currentDate.add(Calendar.MINUTE, (mod < 8 ? -mod : (15 - mod)));
+		currentDate.set(Calendar.SECOND, 0);
+		
+		trueTime.setText(DateFormat.getTimeInstance().format(currentDate.getTime()));
 	}
 
 	/**
 	 * Fonction qui vérifie que le champ de saisie contient des données au bon
 	 * format (entiers).
 	 * 
-	 * @return
+	 * @return true si l'identifaint de l'emplayé est bien formaté, false sinon.
 	 */
-	public boolean checkIdSalarie() {
-		return (idSalarie.getText().matches("[0-9]+") && idSalarie.getText().length() > 2);
+	public boolean checkIdEmployee() {
+		return (idEmployee.getText().matches("[0-9]+") && idEmployee.getText().length() > 2);
 	}
 
 	/**
 	 * Fonction qui définit si le bouton de validation doit être actif ou non.
 	 */
 	public void setSubmitButtonState() {
-		System.out.println(checkIdSalarie() ? "OK" : "KO");
-		submitButton.setEnabled(checkIdSalarie());
+		submitButton.setEnabled(checkIdEmployee());
 	}
 }
