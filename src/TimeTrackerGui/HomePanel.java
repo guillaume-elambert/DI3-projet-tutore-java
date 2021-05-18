@@ -1,11 +1,11 @@
-package TimeTrackerGui;
-
 /**
  * @file HomePanel.java
  * @brief Contient la classe permettant la création de l'écran principal de l'IHM de la pointeuse.
  * @author Guillaume ELAMBERT
  * @date 2021
  */
+
+package TimeTrackerGui;
 
 
 import java.awt.Color;
@@ -35,19 +35,26 @@ import TimeTrackerBackEnd.TimeTracker;
  * @author Guillaume ELAMBERT
  * @date 2021
  */
-class HomePanel extends JPanel {
+class HomePanel extends JPanel
+{
 
-	private JLabel day;
-	private JLabel clock;
-	private JPanel trueTimeContainer;
-	private JLabel trueTime;
-	private JPanel champs;
-	private JTextField idEmployee;
-	private JButton submitButton;
-	private static Calendar currentDate;
+	private JLabel day;						/**< Le label contenant le jour actuel. */
+	private JLabel clock;					/**< Le label contant l'heure actuelle. */
+	private JPanel trueTimeContainer;		/**< Le conteneur de l'heure retenue et son label. */
+	private JLabel trueTime;				/**< La label contenant l'heure retenue. */
+	private JPanel champs;					/**< Le conteneur du champ de saisie et le bouton de validation. */
+	private JTextField idEmployee;			/**< Le champ de saisie de l'identifiant de l'employé. */
+	private JButton submitButton;			/**< Le bouton de validation. */
+	private static Calendar currentDate;	/**< La date actuelle. */
 
-	public HomePanel(TimeTracker timeTracker) {
-
+	
+	/**
+	 * Constructeur
+	 * 
+	 * @param timeTracker La pointeuse dont on créé l'IHM.
+	 */
+	public HomePanel(TimeTracker timeTracker)
+	{
 		// Paramètres du conteneur
 		setPreferredSize(new Dimension(450, 300));
 		setLayout(null);
@@ -123,10 +130,11 @@ class HomePanel extends JPanel {
 		/*---- Fin container du champ + bouton ----*/
 
 		// On vérifie s'il l'on a pressé le bouton de validation
-		submitButton.addActionListener(new ActionListener() {
+		submitButton.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e)
+			{				
 				timeTracker.getTcpClient().sendTimeTrackingData(
 						DateFormat.getDateInstance(DateFormat.SHORT).format(currentDate.getTime()), 
 						DateFormat.getTimeInstance().format(currentDate.getTime()), 
@@ -136,17 +144,21 @@ class HomePanel extends JPanel {
 		});
 
 		// On effectue des vérifications quand le contenu du champ de saisie a changé
-		idEmployee.addActionListener(new ActionListener() {
+		idEmployee.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				setSubmitButtonState();
 			}
 		});
 
 		// On effectue des vérifications quand le contenu du champ de saisie a changé
-		idEmployee.addKeyListener(new KeyAdapter() {
+		idEmployee.addKeyListener(new KeyAdapter()
+		{
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyTyped(KeyEvent e)
+			{
 				setSubmitButtonState();
 			}
 		});
@@ -154,18 +166,23 @@ class HomePanel extends JPanel {
 		// Soit on affiche un texte par défaut si le champ de saisie est vide
 		// Soit on supprime le texte par défaut si l'utilisateur est sur le champ de
 		// saisie
-		idEmployee.addFocusListener(new FocusListener() {
+		idEmployee.addFocusListener(new FocusListener()
+		{
 			@Override
-			public void focusGained(FocusEvent e) {
-				if (idEmployee.getText().equals(placeholder)) {
+			public void focusGained(FocusEvent e)
+			{
+				if (idEmployee.getText().equals(placeholder))
+				{
 					idEmployee.setText("");
 					idEmployee.setForeground(Color.BLACK);
 				}
 			}
 
 			@Override
-			public void focusLost(FocusEvent e) {
-				if (idEmployee.getText().isEmpty()) {
+			public void focusLost(FocusEvent e)
+			{
+				if (idEmployee.getText().isEmpty())
+				{
 					idEmployee.setForeground(Color.GRAY);
 					idEmployee.setText(placeholder);
 				}
@@ -174,9 +191,11 @@ class HomePanel extends JPanel {
 
 		
 		// On créé un timer pour actualiser le texte du jour et de l'heure
-		Timer timer = new Timer(500, new ActionListener() {
+		Timer timer = new Timer(500, new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				setDay();
 				setClock();
 				setTrueTime();
@@ -189,24 +208,30 @@ class HomePanel extends JPanel {
 		timer.start();
 	}
 
+	
 	/**
 	 * Fonction qui définit la valeur de la date.
 	 */
-	public void setDay() {
+	public void setDay()
+	{
 		day.setText(DateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
 	}
 
+	
 	/**
 	 * Fonction qui définit la valeur de l'horloge.
 	 */
-	public void setClock() {
+	public void setClock()
+	{
 		clock.setText(DateFormat.getTimeInstance().format(Calendar.getInstance().getTime()));
 	}
 
+	
 	/**
 	 * Fonction qui définit la valeur de l'heure retenue.
 	 */
-	public void setTrueTime() {
+	public void setTrueTime()
+	{
 		
 		currentDate = Calendar.getInstance();
 		
@@ -220,20 +245,24 @@ class HomePanel extends JPanel {
 		trueTime.setText(DateFormat.getTimeInstance().format(currentDate.getTime()));
 	}
 
+	
 	/**
 	 * Fonction qui vérifie que le champ de saisie contient des données au bon
 	 * format (entiers).
 	 * 
 	 * @return true si l'identifaint de l'emplayé est bien formaté, false sinon.
 	 */
-	public boolean checkIdEmployee() {
+	public boolean checkIdEmployee()
+	{
 		return (idEmployee.getText().matches("[0-9]+") && idEmployee.getText().length() > 2);
 	}
 
+	
 	/**
 	 * Fonction qui définit si le bouton de validation doit être actif ou non.
 	 */
-	public void setSubmitButtonState() {
+	public void setSubmitButtonState()
+	{
 		submitButton.setEnabled(checkIdEmployee());
 	}
 }

@@ -1,3 +1,11 @@
+/**
+ * @file TCPClient.java
+ * @brief Contient la classe permettant de gérer le client TCP d'une pointeuse.
+ * @author Angèle ROUSSEL
+ * @author Guillaume ELAMBERT
+ * @date 2021
+ */
+
 package TimeTrackerBackEnd;
 
 import java.io.IOException;
@@ -13,36 +21,39 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 /**
- * @file TCPClient.java
- * @brief Contient la classe permettant de gérer le client TCP d'une pointeuse.
+ * @brief La classe permettant de gérer le client TCP d'une pointeuse.
  * @author Angèle ROUSSEL
  * @author Guillaume ELAMBERT
  * @date 2021
  */
-public class TCPClient extends Observable {
+public class TCPClient extends Observable
+{
 	
-	public static final String defaultHost = "localhost";			/**< Le nom par défaut du serveur TCP distant des pointeuses. */
-	public static final int defaultPort = 400;						/**< Le port par défaut  du serveur TCP distant des pointeuses. */
+	public static final String defaultHost = "localhost";	/**< Le nom par défaut du serveur TCP distant des pointeuses. */
+	public static final int defaultPort = 400;				/**< Le port par défaut  du serveur TCP distant des pointeuses. */
 	
-	@Expose private String host;
-	@Expose private int port;
-	private transient Socket socket;
+	@Expose private String host;		/**< Le nom/ip du serveur TCP distant. */
+	@Expose private int port;			/**< Le port du serveur TCP distant. */
+	private transient Socket socket;	/**< La connexion au serveur TCP distant. */
 	
 	
 	/**
 	 * Constructeur par défaut
 	 */
-	public TCPClient() {
+	public TCPClient()
+	{
 		host = defaultHost;
 		port = defaultPort;
 		socket = new Socket();
 		
-		try {
+		try
+		{
 			socket.connect(new InetSocketAddress(host, port));
-		}
-		catch (UnknownHostException e) {
+		} catch (UnknownHostException e)
+		{
 			System.err.print("Connexion au serveur "+host+" impossible.");
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -53,18 +64,21 @@ public class TCPClient extends Observable {
 	 * @param host Le nom du serveur TCP distant.
 	 * @param port Le port du serveur TCP distant.
 	 */
-	public TCPClient(String host, int port) {
+	public TCPClient(String host, int port)
+	{
 				
 		this.host = host;
 		this.port = port;
 		socket = new Socket();
 		
-		try {
+		try
+		{
 			socket.connect(new InetSocketAddress(host, port));
-		}
-		catch (UnknownHostException e) {
+		} catch (UnknownHostException e)
+		{
 			System.err.print("Connexion au serveur "+host+" impossible.");
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -77,10 +91,12 @@ public class TCPClient extends Observable {
 	 * @param time L'heure à envoyer.
 	 * @param idEmployee L'identifiant de l'employe à envoyer.
 	 */
-	public void sendTimeTrackingData(String day, String time, int idEmployee) {
+	public void sendTimeTrackingData(String day, String time, int idEmployee)
+	{
 		OutputStream output;
 		System.out.println("Day : "+day+"\nTime : "+time+"\nId Salarie : "+idEmployee);
-		try {
+		try
+		{
 			output = socket.getOutputStream();
 			byte[] data = day.getBytes();
 			output.write(data);
@@ -90,8 +106,8 @@ public class TCPClient extends Observable {
 			output.write(data);
 			
 			socket.close();
-		} 
-		catch (IOException e) {
+		}  catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -99,16 +115,21 @@ public class TCPClient extends Observable {
 	
 	/**
 	 * Méthode qui retourne l'état de connexion du client TCP.
+	 * 
 	 * @return L'état de connexion du client TCP.
 	 */
-	public boolean getConnexionStatus() {
+	public boolean getConnexionStatus()
+	{
 		boolean status = false;
 		
 		
-		if(this.socket != null && this.socket.isConnected()) {
-			try {
+		if(this.socket != null && this.socket.isConnected())
+		{
+			try
+			{
 				status = new InetSocketAddress(host, port).getAddress().isReachable(30);
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				e.printStackTrace();
 			}
 		}
@@ -120,9 +141,10 @@ public class TCPClient extends Observable {
 	/**
 	 * Accesseur en lecture du nom du serveur TCP distant.
 	 * 
-	 * @return 
+	 * @return Le nom du serveur TCP distant.
 	 */
-	public String getHost() {
+	public String getHost()
+	{
 		return host;
 	}
 
@@ -130,18 +152,21 @@ public class TCPClient extends Observable {
 	/**
 	 * Accesseur en écriture du nom du serveur TCP distant.
 	 * 
-	 * @param Le nouveau nom du serveur TCP distant.
+	 * @param host Le nouveau nom du serveur TCP distant.
 	 */
-	public void setHost(String host) {
+	public void setHost(String host)
+	{
 		this.host = host;
 			socket = new Socket();
 			
-		try {
+		try
+		{
 			socket.connect(new InetSocketAddress(host, port));
-		}
-		catch (UnknownHostException e) {
+		} catch (UnknownHostException e)
+		{
 			System.err.print("Connexion au serveur "+host+" impossible.");
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 		
@@ -155,7 +180,8 @@ public class TCPClient extends Observable {
 	 *  
 	 * @return Le port du serveur TCP distant.
 	 */
-	public int getPort() {
+	public int getPort()
+	{
 		return port;
 	}
 	
@@ -163,18 +189,21 @@ public class TCPClient extends Observable {
 	/**
 	 * Accesseur en écriture du port du serveur TCP distant.
 	 * 
-	 * @param Le nouveau port du serveur TCP distant.
+	 * @param port Le nouveau port du serveur TCP distant.
 	 */
-	public void setPort(int port) {
+	public void setPort(int port)
+	{
 		this.port = port;
 		socket = new Socket();
 		
-		try {
+		try
+		{
 			socket.connect(new InetSocketAddress(host, port));
-		}
-		catch (UnknownHostException e) {
+		} catch (UnknownHostException e)
+		{
 			System.err.print("Connexion au serveur "+host+" impossible.");
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 		
@@ -185,21 +214,23 @@ public class TCPClient extends Observable {
 
 	
 	/**
-	 * Accesseur en lecture du client TCP.
+	 * Accesseur en lecture du socket TCP.
 	 * 
 	 * @return Le client TCP.
 	 */
-	public Socket getSocket() {
+	public Socket getSocket()
+	{
 		return socket;
 	}
 
 	
 	/**
-	 * Accesseur en écriture du client TCP.
+	 * Accesseur en écriture du socket TCP.
 	 * 
-	 * @param Le nouveau client TCP.
+	 * @param socket Le nouveau socket TCP.
 	 */
-	public void setSocket(Socket socket) {
+	public void setSocket(Socket socket)
+	{
 		
 		this.socket = socket;
 		this.host = socket.getInetAddress().getHostName();
@@ -216,18 +247,21 @@ public class TCPClient extends Observable {
 	 * @param host Le nouveau nom du serveur TCP distant.
 	 * @param port Le nouveau port du serveur TCP distant.
 	 */
-	public void setSettings(String host, int port) {
+	public void setSettings(String host, int port)
+	{
 		
 		this.host = host;
 		this.port = port;
 		socket = new Socket();
 		
-		try {
+		try
+		{
 			socket.connect(new InetSocketAddress(host, port));
-		}
-		catch (UnknownHostException e) {
+		} catch (UnknownHostException e)
+		{
 			System.err.print("Connexion au serveur "+host+" impossible.");
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 
@@ -242,7 +276,8 @@ public class TCPClient extends Observable {
 	 * 
 	 * @return L'objet sous forme de chaîne
 	 */
-	public String toJson() {
+	public String toJson()
+	{
 		// On transforme l'objet en objet JSON
 		Gson gsonObj = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		return gsonObj.toJson(this, TCPClient.class); 

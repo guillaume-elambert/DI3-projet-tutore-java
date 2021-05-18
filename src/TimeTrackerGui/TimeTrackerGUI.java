@@ -1,4 +1,3 @@
-package TimeTrackerGui;
 /**
  * @file TimeTrackerGUI.java
  * @brief Conteint la classe permettant de créer l'IHM d'un pointeuse.
@@ -6,6 +5,7 @@ package TimeTrackerGui;
  * @date 2021
  */
 
+package TimeTrackerGui;
 
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -13,24 +13,29 @@ import javax.swing.JPanel;
 
 import TimeTrackerBackEnd.TimeTracker;
 
+
 @SuppressWarnings("serial")
 /**
  * @brief Classe permettant la création de l'IHM de la pointeuse.
  * @author Guillaume ELAMBERT
  * @date 2021
  */
-public class TimeTrackerGUI extends JFrame {
+public class TimeTrackerGUI extends JFrame
+{
 	
-	private TimeTracker timeTracker;
-	private JPanel contentPane;
-	private MenuBar menuBar;
+	private TimeTracker timeTracker;	/**< La pointeuse dont on créé l'IHM. */
+	private JPanel contentPane;			/**< Le conteneur de l'IHM. */
+	private MenuBar menuBar;			/**< La barre de menu de l'IHM. */
 
 	
 	/**
 	 * Constructeur par défaut.
 	 * Créé l'IHM de la pointeuse.
+	 * 
+	 * @param timeTracker La pointeuse dont on créé l'IHM.
 	 */
-	public TimeTrackerGUI(TimeTracker timeTracker) {
+	public TimeTrackerGUI(TimeTracker timeTracker)
+	{
 		
 		this.timeTracker = timeTracker;
 		new SettingsPopup(this.timeTracker);

@@ -1,10 +1,11 @@
-package TimeTrackerGui;
 /**
  * @file SettingsPopup.java
  * @brief Contient la classe permettant de créer des pop-up pour la saisie des paramètres d'une pointeuse.
  * @author Guillaume ELAMBERT
  * @date 2021
  */
+
+package TimeTrackerGui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -27,17 +28,27 @@ import javax.swing.SpinnerNumberModel;
 
 import TimeTrackerBackEnd.TimeTracker;
 
+
 /**
  * @brief Classe permettant de créer des pop-up pour la saisie des paramètres d'une pointeuse.
  * @author Guillaume
  * @date 2021
  */
-public class SettingsPopup {
+public class SettingsPopup
+{
 	
-	public SettingsPopup(TimeTracker timeTracker) {
-		if(timeTracker.isConfigured()) {
+	/**
+	 * Constructeur qui appelle la bonne popup en fonction de l'état de paramétrage de la pointeuse.
+	 * 
+	 * @param timeTracker La pointeuse dont on créé l'IHM.
+	 */
+	public SettingsPopup(TimeTracker timeTracker)
+	{
+		if(timeTracker.isConfigured())
+		{
 			configInputPopup(timeTracker);
-		} else {
+		} else
+		{
 			configChoicePopup(timeTracker);
 		}
 		
@@ -51,7 +62,8 @@ public class SettingsPopup {
 	 * 
 	 * @param timeTracker La pointeuse dont il faudra attribuer les paramètres saisis.
 	 */
-	public void configChoicePopup(TimeTracker timeTracker) {
+	public void configChoicePopup(TimeTracker timeTracker)
+	{
 
 		JPanel contentPane = new JPanel();
 		contentPane.setBorder(null);
@@ -63,7 +75,8 @@ public class SettingsPopup {
 		
 		//Entrée : il n'y a pas de fichiers de configuration
 		//		=> On affiche la pop-up de saisie normale et on arrête le traitement
-		if(timeTrackerFileNames.isEmpty()) {
+		if(timeTrackerFileNames.isEmpty())
+		{
 			timeTracker.setDefaultConf();
 			configInputPopup(timeTracker);
 			return;
@@ -90,9 +103,11 @@ public class SettingsPopup {
 		//On ajoute une action lors du clic sur le bouton pour ajouter une configuration
 		//	=> On ferme la popup
 		//	=> On affiche la popup pour créér un nouvelle config
-		addBtn.addActionListener(new ActionListener() {
+		addBtn.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				JOptionPane.getRootFrame().dispose();
 				addBtn.setEnabled(false);
 				timeTracker.setDefaultConf();
@@ -118,15 +133,18 @@ public class SettingsPopup {
 
 		//Entrée : l'utilisateur à cliquer sur le boutton d'ajout d'une configuration
 		//		=> On arrête le traitement (on ne charge pas la config depuis la pointeuse séléctionnée)
-		if(!addBtn.isEnabled()) {
+		if(!addBtn.isEnabled())
+		{
 			return;
 		}
 		
 		//On définit les options de la pointeuse à partir de la configuration de la pointeuse séléctionnée
 		//Si rien n'a été séléctionné, utilisation des valeurs par défaut
-		if(dialogResult == JOptionPane.OK_OPTION) {
+		if(dialogResult == JOptionPane.OK_OPTION)
+		{
 			timeTracker.copySettings(new TimeTracker(comboBox.getSelectedItem().toString()));
-		} else {
+		} else
+		{
 			timeTracker.setDefaultConf();
 		}
 		
@@ -139,7 +157,8 @@ public class SettingsPopup {
 	 * 
 	 * @param timeTracker La pointeuse
 	 */
-	public void configInputPopup(TimeTracker timeTracker) {
+	public void configInputPopup(TimeTracker timeTracker)
+	{
 
 		String timeTrackerName = null;
 		String tcpHost = null;
@@ -171,7 +190,8 @@ public class SettingsPopup {
 		boolean error, isFirstError = true;
 
 		// On affiche la boîte de dialogue tant que les saisie sont mauvaises
-		do {
+		do
+		{
 
 			// On affiche la boîte de dialogue
 			dialogResult = JOptionPane.showConfirmDialog(null, message.toArray(), "Settings",
@@ -192,7 +212,8 @@ public class SettingsPopup {
 			
 			//Entrée : il y a eu une erreur
 			//		ET c'est la première fois (pas déjà de msg d'erreur)
-			if (error && isFirstError) {
+			if (error && isFirstError)
+			{
 				message.add(0, errorLabel);
 				isFirstError = false;
 			}
@@ -202,15 +223,18 @@ public class SettingsPopup {
 		
 		//Entrée : l'utilisateur a validé le formulaire popup
 		//	=> On définit les paramètre de la pointeuse
-		if (dialogResult == JOptionPane.OK_OPTION) {
+		if (dialogResult == JOptionPane.OK_OPTION)
+		{
 
 			//Si ça n'a pas marché (impossible de créé le fichier de configuration), on réessaie
-			if(!timeTracker.setSettings(timeTrackerName, tcpHost, tcpPort)) {
+			if(!timeTracker.setSettings(timeTrackerName, tcpHost, tcpPort))
+			{
 				configInputPopup(timeTracker);
 				return;
 			}
 			
-		} else {
+		} else
+		{
 			//On définit les paramètres de la pointeuse comme étant ceux par défaut
 			timeTracker.setDefaultConf();
 		}

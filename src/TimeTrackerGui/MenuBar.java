@@ -1,3 +1,10 @@
+/**
+ * @file MenuBar.java
+ * @brief Contient la classe permettant la création d'une barre d'options dans l'IHM de la pointeuse. 
+ * @author Guillaume ELAMBERT
+ * @date 2021
+ */
+
 package TimeTrackerGui;
 
 import java.awt.BorderLayout;
@@ -20,12 +27,6 @@ import javax.swing.Timer;
 
 import TimeTrackerBackEnd.TimeTracker;
 
-/**
- * @file MenuBar.java
- * @brief Contient la classe permettant la création d'une barre d'options dans l'IHM de la pointeuse. 
- * @author Guillaume ELAMBERT
- * @date 2021
- */
 
 @SuppressWarnings("serial")
 /**
@@ -33,20 +34,24 @@ import TimeTrackerBackEnd.TimeTracker;
  * @author Guillaume ELAMBERT
  * @date 2021
  */
-public class MenuBar extends JMenuBar {
+public class MenuBar extends JMenuBar
+{
 
-	private JMenu menu;
-	private JMenuItem settingsMenuItem;
-	private JPanel iconPanel;
-	private JLabel connexionStatus;
+	private JMenu menu;					/**< Le menu déroulant d'options. */
+	private JMenuItem settingsMenuItem;	/**< Le bouton d'options. */
+	private JPanel iconPanel;			/**< Conteneur de l'image. */
+	private JLabel connexionStatus;		/**< Label qui contiendra l'icône de l'état de connexion avec le serveur TCP distant. */
 	
-	static final String connectedStatusImg = "connection-30px.png";
-	static final String notConnectedStatusImg = "no-connection-30px.png";
+	static final String connectedStatusImg = "connection-30px.png";			/**< Image de l'état de connexion OK. */
+	static final String notConnectedStatusImg = "no-connection-30px.png";	/**< Image de l'état de connexion KO. */
 
 	/**
 	 * Créé la barre de menu.
+	 * 
+	 * @param timeTracker La pointeuse dont on créé l'IHM.
 	 */
-	public MenuBar(TimeTracker timeTracker) {
+	public MenuBar(TimeTracker timeTracker)
+	{
 		menu = new JMenu("Manage");
 		settingsMenuItem = new JMenuItem("Settings",
 				new ImageIcon(MenuBar.class.getResource("/assets/images/settings-20px.png")));
@@ -68,9 +73,11 @@ public class MenuBar extends JMenuBar {
 		iconPanel.add(connexionStatus, BorderLayout.EAST);
 
 		//Quand clic => ouvrir popup paramètres
-		settingsMenuItem.addActionListener(new ActionListener() {
+		settingsMenuItem.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				new SettingsPopup(timeTracker);
 			}
 		});
@@ -78,9 +85,11 @@ public class MenuBar extends JMenuBar {
 		setConnectionStatus(timeTracker.getTcpClient().getConnexionStatus());
 		
 		// On créé un timer pour actualiser l'icône d'état de connexion
-		Timer timer = new Timer(60000, new ActionListener() {
+		Timer timer = new Timer(60000, new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				setConnectionStatus(timeTracker.getTcpClient().getConnexionStatus());
 			}
 		});
@@ -89,10 +98,11 @@ public class MenuBar extends JMenuBar {
 		timer.setCoalesce(true);
 		timer.start();
 		
-		Observer tcpClientObserver = new Observer() {
-			
+		Observer tcpClientObserver = new Observer()
+		{			
 			@Override
-			public void update(Observable obj, Object arg) {
+			public void update(Observable obj, Object arg)
+			{
 				setConnectionStatus(timeTracker.getTcpClient().getConnexionStatus());
 			}
 		};
@@ -107,7 +117,8 @@ public class MenuBar extends JMenuBar {
 	 * 
 	 * @param isConnected L'état de connexion de la pointeuse.
 	 */
-	public void setConnectionStatus(boolean isConnected) {
+	public void setConnectionStatus(boolean isConnected)
+	{
 		connexionStatus.setIcon(new ImageIcon(MenuBar.class.getResource("/assets/images/"+ (isConnected ? connectedStatusImg : notConnectedStatusImg) )));
 	}
 
