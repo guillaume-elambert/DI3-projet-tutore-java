@@ -254,6 +254,8 @@ public class TCPClient extends Observable
 		this.port = port;
 		socket = new Socket();
 		
+		System.out.println(host + " : " + port);
+		
 		try
 		{
 			socket.connect(new InetSocketAddress(host, port));

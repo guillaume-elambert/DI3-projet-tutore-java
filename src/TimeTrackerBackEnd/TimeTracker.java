@@ -89,7 +89,7 @@ public class TimeTracker
 			}
 			
 			// On transforme le JSON en objet
-			Gson gsonObj = new Gson();
+			Gson gsonObj = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 			TimeTracker timeTrackerBackup = gsonObj.fromJson(res, TimeTracker.class);
 			
 			this.timeTrackerName = timeTrackerBackup.timeTrackerName;

@@ -29,19 +29,28 @@ public class TimeTrackerProject
 	 */
 	public static void main(String... args)
 	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
+		new Thread(new Runnable() {
 			@SuppressWarnings("resource")
 			@Override
 			public void run()
 			{
-				try
-				{
-					new ServerSocket(400);
-				} catch (IOException e)
-				{
+				try {
+					ServerSocket serveur = new ServerSocket(400);
+					while(serveur.accept() != null);
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				this.run();
+			}
+		}).start();
+		
+		
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				
 
 				TimeTracker timeTracker = new TimeTracker();
 				TimeTrackerGUI frame = new TimeTrackerGUI(timeTracker);
