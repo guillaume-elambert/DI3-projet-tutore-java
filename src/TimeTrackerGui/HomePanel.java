@@ -35,7 +35,7 @@ import TimeTrackerBackEnd.TimeTracker;
  * @author Guillaume ELAMBERT
  * @date 2021
  */
-class HomePanel extends JPanel
+public class HomePanel extends JPanel
 {
 
 	private JLabel day;						/**< Le label contenant le jour actuel. */

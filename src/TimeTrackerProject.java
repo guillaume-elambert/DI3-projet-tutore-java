@@ -21,7 +21,10 @@ import TimeTrackerGui.TimeTrackerGUI;
  */
 public class TimeTrackerProject
 {
-
+	private static TimeTracker timeTracker;
+	private static TimeTrackerGUI frame;
+	
+	
 	/**
 	 * Fonction principale du projet.
 	 * 
@@ -52,8 +55,8 @@ public class TimeTrackerProject
 			{
 				
 
-				TimeTracker timeTracker = new TimeTracker();
-				TimeTrackerGUI frame = new TimeTrackerGUI(timeTracker);
+				timeTracker = new TimeTracker();
+				frame = new TimeTrackerGUI(timeTracker);
 				frame.setVisible(true);
 			}
 		});
